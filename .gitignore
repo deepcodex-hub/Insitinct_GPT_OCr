@@ -1,0 +1,32 @@
+# Python/Environments
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Datasets & Output logs
+yolo_dataset/
+yolo_dataset_tiny/
+coco_converted/
+coco_converted2/
+dataset/
+data/synth_meter/
+train/
+test/
+valid/
+outputs/
+results/
+runs/
+debug_artifacts/
+*.log
+
+# Model Weights
+*.pt
+*.onnx
+*.engine
+*.trt
+models/exports/
+
+# System
+.DS_Store
+push_error.txt

@@ -1,0 +1,16 @@
+triton:
+  image: nvcr.io/nvidia/tritonserver:23.08-py3
+  replicaCount: 2
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+      memory: "8Gi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  modelRepositoryPath: "s3://agm-models-bucket/triton-repo"
+  args:
+    - trt
+    - onnxruntime

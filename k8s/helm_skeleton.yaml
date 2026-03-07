@@ -1,0 +1,30 @@
+# Chart.yaml
+apiVersion: v2
+name: ag-ocr-pipeline
+description: Helm chart for Anti-Gravity OCR Pipeline
+version: 0.1.0
+appVersion: "1.0.0"
+
+# values.yaml
+image:
+  repository: ag-ocr-api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+    nvidia.com/gpu: 1
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+    nvidia.com/gpu: 1
+
+env:
+  S3_BUCKET: ag-ocr-artifacts
+  DB_HOST: postgres-service

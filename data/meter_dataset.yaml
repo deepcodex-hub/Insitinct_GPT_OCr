@@ -1,0 +1,18 @@
+path: D:/GPT_instinct/yolo_dataset_tiny
+train: images/train
+val: images/train
+
+names:
+  0: readings
+  1: '.'
+  2: '0'
+  3: '1'
+  4: '2'
+  5: '3'
+  6: '4'
+  7: '5'
+  8: '6'
+  9: '7'
+  10: '8'
+  11: '9'
+  12: kwh

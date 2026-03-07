@@ -1,0 +1,27 @@
+# Core ML (CPU versions for compatibility)
+torch
+torchvision
+numpy
+opencv-python-headless
+ultralytics
+paddleocr
+paddlepaddle
+easyocr
+
+# API & Web
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+pydantic-settings
+
+# Utils
+boto3
+redis
+celery
+psycopg2-binary
+sqlalchemy
+Levenshtein
+pandas
+scikit-learn
+pillow

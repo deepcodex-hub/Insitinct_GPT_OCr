@@ -1,0 +1,14 @@
+apiVersion: v2
+name: agm-ocr-pipeline
+description: Advanced Anti-Gravity OCR Pipeline Production Endpoints
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+# Values to override in values.yaml
+# image:
+#   repository: mycr/agm-api
+#   tag: latest
+# resources:
+#   limits:
+#     nvidia.com/gpu: 1

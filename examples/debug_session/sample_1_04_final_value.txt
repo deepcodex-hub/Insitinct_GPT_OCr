@@ -1,0 +1,3 @@
+Recognized Value: 34567.2
+Confidence: 1.1154
+Sources Voted: [{"value": "34567.2", "score": 0.9295100482894667}, {"value": "MHplar", "score": 0.07048995171053332}]

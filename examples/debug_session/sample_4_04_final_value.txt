@@ -1,0 +1,3 @@
+Recognized Value: 34567.2
+Confidence: 1.2000
+Sources Voted: [{"value": "34567.2", "score": 1.0}]
