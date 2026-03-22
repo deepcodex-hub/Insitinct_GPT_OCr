@@ -4,8 +4,18 @@
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 
 ## 🌐 Live Deployment
-The application is officially deployed and accessible here:  
+The application is officially live! Share this link with your team:  
 👉 **[https://deepcodex-instinct-gpt-ocr.streamlit.app/](https://deepcodex-instinct-gpt-ocr.streamlit.app/)**
+
+---
+
+## ⚡ Quick Start (Local)
+Run these three commands to get the app running on your machine:
+```bash
+git clone https://github.com/deepcodex-hub/Insitinct_GPT_OCr.git && cd Insitinct_GPT_OCr
+python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
 
 ---
 
@@ -84,7 +94,7 @@ graph TD
 git clone https://github.com/deepcodex-hub/Insitinct_GPT_OCr.git
 cd Insitinct_GPT_OCr
 python -m venv .venv
-source .venv/bin/activate  # or .venv\Scripts\activate
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
