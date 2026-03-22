@@ -106,11 +106,13 @@ with col1:
                 try:
                     ocr_engine.execute_inference(img_path, result_json_path)
                     
-                    with open(result_json_path, 'r') as f:
-                        result = json.load(f)
-                    
-                    st.session_state['latest_result'] = result
-                    st.success("Analysis Complete!")
+                    if os.path.exists(result_json_path):
+                        with open(result_json_path, 'r') as f:
+                            result = json.load(f)
+                        st.session_state['latest_result'] = result
+                        st.success("Analysis Complete!")
+                    else:
+                        st.error("Inference did not generate a result file.")
                 except Exception as e:
                     st.error(f"Inference Error: {e}")
 

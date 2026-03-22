@@ -57,11 +57,19 @@ def execute_inference(image_path, output_json=None):
         pad = 100
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
+        # IMPROVE CONTRAST (Helpful for thin digits like '1')
+        lab = cv2.cvtColor(padded_img, cv2.COLOR_BGR2LAB)
+        l, a, b = cv2.split(lab)
+        clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+        cl = clahe.apply(l)
+        limg = cv2.merge((cl,a,b))
+        final_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+        
         # run on padded raw image with optimized threshold
         print(f"Running YOLO inference on image shape: {padded_img.shape}")
         # Convert BGR to RGB for YOLO (Ultra-robust for CPU)
-        rgb_img = cv2.cvtColor(padded_img, cv2.COLOR_BGR2RGB)
-        results = digit_model(rgb_img, imgsz=1024, conf=0.08, iou=0.3)[0] # Slightly higher confidence to ignore noise
+        rgb_img = cv2.cvtColor(final_img, cv2.COLOR_BGR2RGB)
+        results = digit_model(rgb_img, imgsz=1024, conf=0.03, iou=0.3)[0] 
         
         # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
         # Use simple IOU check
