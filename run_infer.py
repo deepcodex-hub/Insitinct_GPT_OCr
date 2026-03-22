@@ -53,7 +53,7 @@ def execute_inference(image_path, output_json=None):
         digit_model = YOLO(model_path)
         
         # Use the RAW target field for detection (SR/Dewarp can sometimes distort sharp edges of digital digits)
-        pad = 30
+        pad = 100
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
         # run on padded raw image with optimized threshold
@@ -71,6 +71,17 @@ def execute_inference(image_path, output_json=None):
             digits.append((x1, cls_name, conf))
         
         print(f"Detected {len(digits)} digits.")
+        
+        # DRAW BOXES FOR DEBUG
+        debug_img = padded_img.copy()
+        for box in results.boxes:
+            bx1, by1, bx2, by2 = box.xyxy[0].cpu().numpy()
+            bcl = int(box.cls[0])
+            bcn = str(bcl) if bcl < 10 else '.'
+            bcf = float(box.conf[0])
+            cv2.rectangle(debug_img, (int(bx1), int(by1)), (int(bx2), int(by2)), (0, 255, 0), 2)
+            cv2.putText(debug_img, f"{bcn} {bcf:.2f}", (int(bx1), int(by1)-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        cv2.imwrite(os.path.join("outputs", "debug_target.jpg"), debug_img)
         
         # Sort left to right
         digits.sort(key=lambda x: x[0])
