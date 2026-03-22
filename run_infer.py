@@ -57,7 +57,8 @@ def run_infer(image_path, output_json=None):
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
         # run on padded raw image with optimized threshold
-        results = digit_model(padded_img, imgsz=640, conf=0.10, iou=0.5)[0]
+        print(f"Running YOLO inference on image shape: {padded_img.shape}")
+        results = digit_model(padded_img, imgsz=640, conf=0.01, iou=0.5)[0]
         digits = []
         for box in results.boxes:
             x1 = float(box.xyxy[0][0]) - pad

@@ -78,7 +78,7 @@ with col1:
     
     if uploaded_file is not None:
         # Save temp file
-        img_path = os.path.join("tmp", uploaded_file.name)
+        img_path = os.path.join("tmp", "upload.jpg")
         os.makedirs("tmp", exist_ok=True)
         with open(img_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
@@ -145,6 +145,6 @@ with col2:
 st.divider()
 st.markdown("""
 <div style='text-align: center'>
-    <p>Built with ❤️ by deepcodex-hub & Antigravity</p>
+    <p>Built by team GPT</p>
 </div>
 """, unsafe_allow_html=True)
