@@ -13,7 +13,7 @@ from ag_module.sr import RealESRGANWrapper
 from ocr_pipeline.recognizer import OCRRecognizer
 from ocr_pipeline.llm_corrector import LLMCorrector
 
-def run_infer(image_path, output_json=None):
+def execute_inference(image_path, output_json=None):
     image = cv2.imread(image_path)
     if image is None:
         print(f"Error: Could not read image {image_path}")
@@ -115,4 +115,4 @@ if __name__ == "__main__":
     parser.add_argument("--output", help="Output JSON file")
     args = parser.parse_args()
     
-    run_infer(args.image, args.output)
+    execute_inference(args.image, args.output)

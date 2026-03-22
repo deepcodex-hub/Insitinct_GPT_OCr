@@ -104,7 +104,7 @@ with col1:
                 
                 # Execute inference
                 try:
-                    run_infer.run_infer(img_path, result_json_path)
+                    run_infer.execute_inference(img_path, result_json_path)
                     
                     with open(result_json_path, 'r') as f:
                         result = json.load(f)
