@@ -31,6 +31,8 @@ def run_infer(image_path, output_json=None):
     if detections:
         target_field = detector.crop_detected_fields(image, detections)[0]
     else:
+        # Fallback for pre-cropped images (like 1_cropped_158)
+        print("No meter screen detected, assuming input image is the crop.")
         target_field = image
 
     # 2. AGM: Dewarp & SR

@@ -10,6 +10,10 @@ from ultralytics import YOLO
 # Project imports
 from run_infer import run_infer
 
+# Ensure directories exist
+os.makedirs("outputs", exist_ok=True)
+os.makedirs("tmp", exist_ok=True)
+
 # Page config
 st.set_page_config(
     page_title="Instinct GPT OCR - Meter Reading",
@@ -80,7 +84,7 @@ with col1:
             f.write(uploaded_file.getbuffer())
         
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+        st.image(image, caption="Uploaded Image", use_container_width=True)
         
         if st.button("🚀 Run Inference"):
             with st.spinner("Processing meter reading..."):
@@ -127,13 +131,13 @@ with col2:
         
         with tabs[0]:
             if os.path.exists("outputs/debug_target.jpg"):
-                st.image("outputs/debug_target.jpg", use_column_width=True)
+                st.image("outputs/debug_target.jpg", use_container_width=True)
         with tabs[1]:
             if os.path.exists("outputs/debug_warped.jpg"):
-                st.image("outputs/debug_warped.jpg", use_column_width=True)
+                st.image("outputs/debug_warped.jpg", use_container_width=True)
         with tabs[2]:
             if os.path.exists("outputs/debug_enhanced.jpg"):
-                st.image("outputs/debug_enhanced.jpg", use_column_width=True)
+                st.image("outputs/debug_enhanced.jpg", use_container_width=True)
     else:
         st.info("Upload an image and click 'Run Inference' to see results.")
 

@@ -39,7 +39,7 @@ app = FastAPI(title="Production Anti-Gravity OCR API")
 
 # Initialize models
 try:
-    detector = YOLOv8Adapter(model_path=r'D:\GPT_instinct\models\yolov8_detector.pt') # strict yolov8
+    detector = YOLOv8Adapter(model_path='yolov8n.pt') # strict yolov8
 except:
     detector = MeterDetector() # fallback
 
@@ -47,7 +47,7 @@ dewarper = DewarpProcessor()
 sr_wrapper = RealESRGANWrapper(fp16=True)
 
 # Detectors
-decimal_detector = DecimalDetectorConfig(model_path=r'D:\GPT_instinct\models\weights\decimal_cnn_best.pt')
+decimal_detector = DecimalDetectorConfig(model_path=r'runs/detect/meter_detector/weights/best.pt')
 
 # OCR Engines
 trocr = TrOCRAdapter()
