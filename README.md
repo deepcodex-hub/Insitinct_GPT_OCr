@@ -1,4 +1,4 @@
-# Instinct GPT OCR (Anti-Gravity Pipeline)
+# Instinct GPT OCR (DeepOCR Pipeline)
 
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 
