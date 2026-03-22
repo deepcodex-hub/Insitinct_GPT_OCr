@@ -15,7 +15,11 @@ This repository now features a custom-trained **YOLOv8s** (Small) model, signifi
 1. Install dependencies: `pip install -r requirements.txt`
 2. Run the dashboard: `streamlit run streamlit_app.py`
 
----
+### ⚙️ Command Line Inference
+Test the pipeline immediately using the optimized image **158** (recommended):
+```bash
+python run_infer.py --image "dataset/test/images/1_cropped_158_jpg-00_jpg.rf.d2c53374bfbf99faacb19c6d4d9a1eb2.jpg"
+```
 
 ## 🗺️ Project Flow Map & Performance
 Our intelligent pipeline utilizes an ensemble approach combined with intensive preprocessing to ensure extremely high confidence readings.
