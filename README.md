@@ -3,124 +3,89 @@
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 
 ## 🚀 Optimized YOLOv8s ML Pipeline
-This repository now features a custom-trained **YOLOv8s** (Small) model, significantly upgraded for high-precision meter reading.
+This repository features a custom-trained **YOLOv8s** (Small) model, optimized for high-precision digital meter reading and segment-level character recognition.
 
 ### Performance Highlights:
-- **Architecture:** YOLOv8s (Small) trained for **200 Epochs**.
-- **Accuracy:** mAP50 = **0.963**.
-- **Dependencies:** Streamlined for **Streamlit Cloud** (Removed heavy Paddle/EasyOCR).
-- **Capabilities:** Correctly identifies leading digits (`15620.`) and handles partially truncated boundaries.
+- **Architecture:** YOLOv8s (Small) trained for **200 Epochs** on 619 images.
+- **Accuracy:** mAP50 = **0.963** for digit/decimal detection.
+- **Stability:** High-resolution inference (up to 1024px) for capturing thin segments like the leading '1'.
+- **Cloud Optimized:** Lean dependency tree for **Streamlit Cloud** (Fast boot, BGR-to-RGB robustness).
+- **Architecture:** Transitioned from generic OCR to a **Digit-First YOLO Ensemble** with LLM correction.
 
 ### 📟 Launching the Streamlit App
 1. Install dependencies: `pip install -r requirements.txt`
 2. Run the dashboard: `streamlit run streamlit_app.py`
+3. **Streamlit Cloud**: Simply push to `main` and the app auto-deploys via [share.streamlit.io](https://share.streamlit.io).
 
 ### ⚙️ Command Line Inference
-Test the pipeline immediately using the optimized image **158** (recommended):
+Test the pipeline immediately on a single image (e.g., sample 158):
 ```bash
-python run_infer.py --image "dataset/test/images/1_cropped_158_jpg-00_jpg.rf.d2c53374bfbf99faacb19c6d4d9a1eb2.jpg"
+python ocr_backend.py --image "dataset/test/images/1_cropped_158_jpg-00_jpg.rf.d2c53374bfbf99faacb19c6d4d9a1eb2.jpg"
 ```
 
-## 🗺️ Project Flow Map & Performance
-Our intelligent pipeline utilizes an ensemble approach combined with intensive preprocessing to ensure extremely high confidence readings.
+## 🗺️ Project Flow Map
+Our pipeline uses a robust fallback system to ensure digits are never missed, even on reflecting or pre-cropped screens.
 
 ```mermaid
 graph TD
     A[Input Meter Image] --> B[YOLOv8 Meter Detector]
     B --> C{Screen Detected?}
     C -- Yes --> D[Crop Target Field]
-    C -- No --> E[HSV Color Fallback]
+    C -- No --> E[Full Image Fallback]
     E --> D
     
     D --> F[CV Preprocessing]
-    F --> |Dewarping| G[Alignment & Rotation]
-    G --> |Real-ESRGAN| H[Super Resolution]
+    F --> |Padding| G[100px Boundary Safety]
+    G --> |Sharpening| H[High-Pass Kernel Processing]
     
-    H --> I[OCR Ensemble]
+    H --> I[Digit-Specific YOLO Engine]
     
-    subgraph Ensemble Recognizers
-        I --> J[Microsoft TrOCR]
-        I --> K[PaddleOCR]
-        I --> L[EasyOCR]
+    subgraph Character Recognition
+        I --> J[Fine-tuned Model meter_detector4]
+        J --> K[IOU Deduplication]
     end
     
-    J --> M[ROVER Token Alignment]
-    K --> M
-    L --> M
+    K --> L[Horizontal Sort L-to-R]
+    L --> M[Phi-2 / Mistral LLM Correction]
     
-    M --> N[Phi-2 / Mistral LLM Correction]
+    M --> N{Confidence > 85%?}
+    N -- Yes --> O[✅ Final Output Json]
+    N -- No --> P[⚠️ QC Flag / Visual Debug]
     
-    N --> O{Confidence > 85%?}
-    O -- Yes --> P[✅ Final Output Json]
-    O -- No --> Q[⚠️ Flag for QC / Label Studio]
-    
-    style P fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#0f5132
-    P -.-> R((🎯 Success Rate: 96.5%))
-    R -.-> S((⚡ Latency: ≤ 500ms))
+    style O fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#0f5132
 ```
-
-*Our current overall success rate for fully automated, high-confidence extraction is **96.5%**, significantly reducing manual QC bottlenecks.*
 
 ---
 
-## 🛠️ Testing & Running Locally
+## 🛠️ Project Architecture (Final State)
 
-Follow these instructions to fork, install, and test the project on your local machine.
+- **`ocr_backend.py`**: The core inference engine. Handles padding, resolution scaling (1024px), and IOU-based digit deduplication.
+- **`streamlit_app.py`**: The production dashboard. Includes **Debug Diagnostics** (Sidebar) and **Target Field Visibility** (Tabs) to verify model predictions.
+- **`runs/detect/meter_detector4/`**: Contains the production-ready weights (`best.pt`).
+- **`outputs/`**: Temporary storage for debug artifacts like `debug_target.jpg` (shows bounding boxes & labels).
+
+## 🤝 Getting Started Locally
 
 ### 1. Fork & Clone
-1. Click the **Fork** button at the top right of this repository to create your own copy.
-2. Clone your forked repo:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/Insitinct_GPT_OCr.git
-   cd Insitinct_GPT_OCr
-   ```
-
-### 2. Environment Setup
-We recommend using a Python virtual environment to manage dependencies:
 ```bash
-python -m venv .venv
-# On Windows
-.venv\Scripts\activate
-# On Linux/Mac
-source .venv/bin/activate
+git clone https://github.com/deepcodex-hub/Insitinct_GPT_OCr.git
+cd Insitinct_GPT_OCr
 ```
 
-Install requirements:
+### 2. Environment Setup
 ```bash
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
-### 3. Local Quick Start & Testing
-You can easily test the entire pipeline on a single image to see the outputs and debug artifacts:
-
+### 3. Verification
+Run the diagnostic test to ensure weights and paths are correctly configured:
 ```bash
-python run_infer.py --image "dataset/test/images/1_cropped_158_jpg-00_jpg.rf.d2c53374bfbf99faacb19c6d4d9a1eb2.jpg" --output "outputs/result.json"
-```
-
-**What happens?**
-- The script detects the meter, crops it, and applies specialized YOLOv8s digit detection. 
-- You can check the `outputs/` folder for debug visualizations (`debug_target.jpg`, etc.).
-- A final JSON with coordinates, confidences, and the final value is saved.
-
-### 4. Running Test Suites
-To ensure your changes haven't broken the pipeline, run the automated API and unit tests:
-```bash
-pytest test_api.py test_single_image.py
-```
-
-### 5. Services & Docker (Optional)
-If you want to spin up the full production API (FastAPI, Redis, MinIO, Celery Workers):
-```bash
-docker-compose up -d
-```
-Or run the dev script:
-```bash
-./dev_run.sh
+python -c "import ocr_backend; print('Backend Loaded Successfully')"
 ```
 
 ---
 
-## 🤝 Contribution Guidelines
-- Create a new branch for any feature: `git checkout -b feature/your-feature-name`
-- Write tests for your logic inside the `tests/` directory.
-- Verify `pytest` passes before submitting a Pull Request to the `main` branch.
+## 🏆 Built by Team GPT
+*Optimized for speed, accuracy, and seamless Streamlit Cloud deployment.*
