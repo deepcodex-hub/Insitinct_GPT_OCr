@@ -61,12 +61,43 @@ def execute_inference(image_path, output_json=None):
         print(f"Running YOLO inference on image shape: {padded_img.shape}")
         # Convert BGR to RGB for YOLO (Ultra-robust for CPU)
         rgb_img = cv2.cvtColor(padded_img, cv2.COLOR_BGR2RGB)
-        results = digit_model(rgb_img, imgsz=1024, conf=0.005, iou=0.5)[0]
-        digits = []
+        results = digit_model(rgb_img, imgsz=1024, conf=0.08, iou=0.3)[0] # Slightly higher confidence to ignore noise
+        
+        # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
+        # Use simple IOU check
+        raw_digits = []
         for box in results.boxes:
-            x1 = float(box.xyxy[0][0]) - pad
-            cls_id = int(box.cls[0])
-            conf = float(box.conf[0])
+            b = box.xyxy[0].cpu().numpy()
+            raw_digits.append({
+                "bbox": b,
+                "cls": int(box.cls[0]),
+                "conf": float(box.conf[0])
+            })
+        
+        # Sort by confidence and remove overlaps
+        final_boxes = []
+        raw_digits.sort(key=lambda x: x['conf'], reverse=True)
+        for d in raw_digits:
+            keep = True
+            for f in final_boxes:
+                # Basic overlap check
+                ix1 = max(d['bbox'][0], f['bbox'][0])
+                iy1 = max(d['bbox'][1], f['bbox'][1])
+                ix2 = min(d['bbox'][2], f['bbox'][2])
+                iy2 = min(d['bbox'][3], f['bbox'][3])
+                inter = max(0, ix2-ix1) * max(0, iy2-iy1)
+                area_d = (d['bbox'][2]-d['bbox'][0]) * (d['bbox'][3]-d['bbox'][1])
+                if inter / area_d > 0.5:
+                    keep = False
+                    break
+            if keep:
+                final_boxes.append(d)
+
+        digits = []
+        for d in final_boxes:
+            x1 = d['bbox'][0] - pad
+            cls_id = d['cls']
+            conf = d['conf']
             # Classes: 0='0', ..., 9='9', 10='d'
             cls_name = str(cls_id) if cls_id < 10 else '.'
             digits.append((x1, cls_name, conf))
@@ -109,10 +140,10 @@ def execute_inference(image_path, output_json=None):
         "detections": [
             {
                 "bbox": [int(v) for v in det['bbox']],
-                "class": int(det['class']),
-                "confidence": float(det['confidence'])
-            } for det in detections
-        ] if isinstance(detections, list) else detections
+                "class": int(det['cls']),
+                "confidence": float(det['conf'])
+            } for det in final_boxes
+        ]
     }
 
     print(json.dumps(result, indent=4))
