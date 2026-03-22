@@ -64,17 +64,13 @@ def execute_inference(image_path, output_json=None):
         pad = 100
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
-        # IMPROVE CONTRAST (Helpful for thin digits like '1')
-        gray = cv2.cvtColor(padded_img, cv2.COLOR_BGR2GRAY)
-        # Background compensation (useful for reflecting meter screens)
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 25))
-        blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, kernel)
-        gray_res = cv2.add(gray, blackhat)
-        final_img = cv2.cvtColor(gray_res, cv2.COLOR_GRAY2BGR) # Convert back to 3ch for YOLO
+        # IMPROVE SHARPNESS (Simple and robust for thin digits)
+        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+        final_img = cv2.filter2D(padded_img, -1, kernel)
         
         # run on padded raw image with optimized threshold
         print(f"Running YOLO inference on image shape: {final_img.shape}")
-        results = digit_model(final_img, imgsz=1280, conf=0.08, iou=0.25)[0] 
+        results = digit_model(final_img, imgsz=1024, conf=0.08, iou=0.25)[0] 
         
         # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
         # Use simple IOU check

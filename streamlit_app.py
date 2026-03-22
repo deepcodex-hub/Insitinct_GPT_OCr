@@ -8,7 +8,7 @@ from PIL import Image
 from ultralytics import YOLO
 
 # Project imports
-import inference_engine
+import ocr_backend as ocr_engine
 
 # Ensure directories exist
 os.makedirs("outputs", exist_ok=True)
@@ -104,7 +104,7 @@ with col1:
                 
                 # Execute inference
                 try:
-                    inference_engine.execute_inference(img_path, result_json_path)
+                    ocr_engine.execute_inference(img_path, result_json_path)
                     
                     if os.path.exists(result_json_path):
                         with open(result_json_path, 'r') as f:
