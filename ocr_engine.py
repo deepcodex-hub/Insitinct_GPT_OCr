@@ -61,7 +61,7 @@ def execute_inference(image_path, output_json=None):
         print(f"Running YOLO inference on image shape: {padded_img.shape}")
         # Convert BGR to RGB for YOLO (Ultra-robust for CPU)
         rgb_img = cv2.cvtColor(padded_img, cv2.COLOR_BGR2RGB)
-        results = digit_model(rgb_img, imgsz=640, conf=0.01, iou=0.5)[0]
+        results = digit_model(rgb_img, imgsz=1024, conf=0.005, iou=0.5)[0]
         digits = []
         for box in results.boxes:
             x1 = float(box.xyxy[0][0]) - pad
