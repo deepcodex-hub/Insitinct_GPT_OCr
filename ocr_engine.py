@@ -51,6 +51,7 @@ def execute_inference(image_path, output_json=None):
             model_path = r"runs/detect/meter_detector/weights/best.pt"
         print(f"Loading digit model from: {model_path}")
         digit_model = YOLO(model_path)
+        print(f"Model Classes: {digit_model.names}")
         
         # Use the RAW target field for detection (SR/Dewarp can sometimes distort sharp edges of digital digits)
         pad = 100
