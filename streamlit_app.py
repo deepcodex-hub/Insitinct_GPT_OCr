@@ -67,6 +67,17 @@ with st.sidebar:
     st.write("- **Epochs:** 200")
     st.write("- **mAP50:** 0.963")
 
+    st.divider()
+    with st.expander("🛠️ Debug Diagnostics"):
+        st.write(f"**CWD:** `{os.getcwd()}`")
+        model_path = "runs/detect/meter_detector4/weights/best.pt"
+        exists = os.path.exists(model_path)
+        st.write(f"**Model Path:** `{model_path}`")
+        st.write(f"**Found:** {'✅' if exists else '❌'}")
+        if exists:
+            # Check size
+            st.write(f"**Size:** {os.path.getsize(model_path) / 1024 / 1024:.2f} MB")
+
 # Main UI
 st.title("📟 Smart Meter OCR Dashboard")
 st.subheader("Extract precise readings from utility meters using advanced computer vision.")
