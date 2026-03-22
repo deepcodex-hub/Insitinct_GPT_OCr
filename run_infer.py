@@ -58,7 +58,9 @@ def run_infer(image_path, output_json=None):
         
         # run on padded raw image with optimized threshold
         print(f"Running YOLO inference on image shape: {padded_img.shape}")
-        results = digit_model(padded_img, imgsz=640, conf=0.01, iou=0.5)[0]
+        # Convert BGR to RGB for YOLO (Ultra-robust for CPU)
+        rgb_img = cv2.cvtColor(padded_img, cv2.COLOR_BGR2RGB)
+        results = digit_model(rgb_img, imgsz=640, conf=0.01, iou=0.5)[0]
         digits = []
         for box in results.boxes:
             x1 = float(box.xyxy[0][0]) - pad

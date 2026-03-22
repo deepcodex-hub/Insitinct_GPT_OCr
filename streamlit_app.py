@@ -8,7 +8,7 @@ from PIL import Image
 from ultralytics import YOLO
 
 # Project imports
-from run_infer import run_infer
+import run_infer
 
 # Ensure directories exist
 os.makedirs("outputs", exist_ok=True)
@@ -95,7 +95,7 @@ with col1:
             f.write(uploaded_file.getbuffer())
         
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_container_width=True)
+        st.image(image, caption="Uploaded Image", width="stretch")
         
         if st.button("🚀 Run Inference"):
             with st.spinner("Processing meter reading..."):
@@ -103,10 +103,8 @@ with col1:
                 result_json_path = os.path.join("outputs", "st_result.json")
                 
                 # Execute inference
-                # Note: We use the existing high-performance run_infer function
                 try:
-                    from run_infer import run_infer
-                    run_infer(img_path, result_json_path)
+                    run_infer.run_infer(img_path, result_json_path)
                     
                     with open(result_json_path, 'r') as f:
                         result = json.load(f)
@@ -142,13 +140,13 @@ with col2:
         
         with tabs[0]:
             if os.path.exists("outputs/debug_target.jpg"):
-                st.image("outputs/debug_target.jpg", use_container_width=True)
+                st.image("outputs/debug_target.jpg", width="stretch")
         with tabs[1]:
             if os.path.exists("outputs/debug_warped.jpg"):
-                st.image("outputs/debug_warped.jpg", use_container_width=True)
+                st.image("outputs/debug_warped.jpg", width="stretch")
         with tabs[2]:
             if os.path.exists("outputs/debug_enhanced.jpg"):
-                st.image("outputs/debug_enhanced.jpg", use_container_width=True)
+                st.image("outputs/debug_enhanced.jpg", width="stretch")
     else:
         st.info("Upload an image and click 'Run Inference' to see results.")
 
