@@ -64,12 +64,12 @@ def execute_inference(image_path, output_json=None):
         pad = 100
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
-        # IMPROVE SHARPNESS (Simple and robust for thin digits)
-        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
-        final_img = cv2.filter2D(padded_img, -1, kernel)
+        # Use the RAW target field for detection (Safest baseline)
+        final_img = padded_img
         
         # run on padded raw image with optimized threshold
         print(f"Running YOLO inference on image shape: {final_img.shape}")
+        print(f"Image stats: min={np.min(final_img)}, max={np.max(final_img)}, mean={np.mean(final_img):.2f}")
         results = digit_model(final_img, imgsz=1024, conf=0.08, iou=0.25)[0] 
         
         # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
