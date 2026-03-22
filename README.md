@@ -22,7 +22,7 @@ streamlit run streamlit_app.py
 This repository features a custom-trained **YOLOv8s** (Small) model, specifically fine-tuned for high-precision digital meter reading and segment-level character recognition.
 
 ### Performance Highlights:
-- **Model:** YOLOv8s (Small) trained for **200 Epochs** on 1000 high-quality meter images.
+- **Model Core:** YOLOv8s (Small) trained for **200 Epochs** with **1000+ Augmented Samples**.
 - **Accuracy:** mAP50 = **0.963** for digit/decimal recognition.
 - **High-Res Inference**: Runs at **1024px** resolution to capture thin segments of the leading '1' and decimal points.
 - **Cloud Stability**: Optimized for **Streamlit Cloud** with a lean dependency tree and robust BGR-to-RGB handling.
@@ -106,4 +106,4 @@ python -c "import ocr_backend; print('Backend Loaded Successfully')"
 ---
 
 ## 🏆 Built by Team GPT
-*Ensuring 99%+ accuracy through advanced YOLOv8 character recognition and LLM-powered verification.*
+*Ensuring 96.3% Verified Accuracy through advanced YOLOv8 character recognition and LLM-powered verification.*
