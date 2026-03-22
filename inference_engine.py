@@ -7,13 +7,20 @@ import sys
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from ag_module.detector import MeterDetector
-from ag_module.dewarp import DewarpProcessor
-from ag_module.sr import RealESRGANWrapper
-from ocr_pipeline.recognizer import OCRRecognizer
-from ocr_pipeline.llm_corrector import LLMCorrector
-
 def execute_inference(image_path, output_json=None):
+    # Initialize variables to avoid UnboundLocalError
+    final_boxes = []
+    raw_text = "0"
+    roved_res = {"text": "0", "confidence": 0.0}
+    detections = []
+    
+    # Lazy imports to avoid KeyError/Circular issues on Streamlit
+    from ag_module.detector import MeterDetector
+    from ag_module.dewarp import DewarpProcessor
+    from ag_module.sr import RealESRGANWrapper
+    from ocr_pipeline.recognizer import OCRRecognizer
+    from ocr_pipeline.llm_corrector import LLMCorrector
+
     image = cv2.imread(image_path)
     if image is None:
         print(f"Error: Could not read image {image_path}")
@@ -131,8 +138,7 @@ def execute_inference(image_path, output_json=None):
         }
     except Exception as e:
         print(f"Custom YOLO failed: {e}")
-        raw_text = "0"
-        roved_res = {"text": "0", "confidence": 0.0}
+        # roved_res and raw_text already initialized at top
     
     # 4. LLM Correction
     corrected_res = llm_corrector.correct(raw_text)
