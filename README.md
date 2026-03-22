@@ -8,8 +8,8 @@ This repository now features a custom-trained **YOLOv8s** (Small) model, signifi
 ### Performance Highlights:
 - **Architecture:** YOLOv8s (Small) trained for **200 Epochs**.
 - **Accuracy:** mAP50 = **0.963**.
-- **Capabilities:** Correctly identifies leading digits (`15620.`) and handles partially truncated boundaries via 30px edge padding.
-- **Web App:** Integrated **Streamlit Dashboard** for real-time visualization.
+- **Dependencies:** Streamlined for **Streamlit Cloud** (Removed heavy Paddle/EasyOCR).
+- **Capabilities:** Correctly identifies leading digits (`15620.`) and handles partially truncated boundaries.
 
 ### 📟 Launching the Streamlit App
 1. Install dependencies: `pip install -r requirements.txt`

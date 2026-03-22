@@ -1,14 +1,14 @@
-# Core ML (CPU versions for compatibility)
+# Core ML
 torch
 torchvision
 numpy
 opencv-python-headless
 ultralytics
-paddleocr
-paddlepaddle
-easyocr
+transformers
+pillow
 
-# API & Web
+# Web App
+streamlit
 fastapi
 uvicorn[standard]
 python-multipart
@@ -16,13 +16,5 @@ pydantic
 pydantic-settings
 
 # Utils
-boto3
-redis
-celery
-psycopg2-binary
-sqlalchemy
-Levenshtein
 pandas
 scikit-learn
-pillow
-streamlit

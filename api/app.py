@@ -21,8 +21,12 @@ if not os.path.exists("debug_artifacts"):
     os.makedirs("debug_artifacts")
 
 from ocr_pipeline.trocr_adapter import TrOCRAdapter
-from ocr_pipeline.paddle_adapter import PaddleAdapter
-from ocr_pipeline.easyocr_adapter import EasyOCRAdapter
+try:
+    from ocr_pipeline.paddle_adapter import PaddleAdapter
+    from ocr_pipeline.easyocr_adapter import EasyOCRAdapter
+except ImportError:
+    PaddleAdapter = None
+    EasyOCRAdapter = None
 from ocr_pipeline.ensemble_rover import DecimalAwareRover
 from ocr_pipeline.decimal_validator import DecimalValidator
 from ocr_pipeline.calibrator import ModelCalibrator
@@ -47,8 +51,8 @@ decimal_detector = DecimalDetectorConfig(model_path=r'D:\GPT_instinct\models\wei
 
 # OCR Engines
 trocr = TrOCRAdapter()
-paddle = PaddleAdapter()
-easyocr = EasyOCRAdapter()
+paddle = PaddleAdapter() if PaddleAdapter else None
+easyocr = EasyOCRAdapter() if EasyOCRAdapter else None
 
 # Voting & Validation
 rover = DecimalAwareRover(decimal_penalty=2.0)
@@ -163,9 +167,9 @@ async def infer(background_tasks: BackgroundTasks, file: UploadFile = File(...))
     print("Step 6: Running OCR ensemble (TrOCR)...")
     trocr_res = trocr.recognize(enhanced)
     print("Step 6.1: Running PaddleOCR...")
-    paddle_res = paddle.recognize(enhanced)
+    paddle_res = paddle.recognize(enhanced) if paddle else []
     print("Step 6.2: Running EasyOCR...")
-    easy_res = easyocr.recognize(enhanced)
+    easy_res = easyocr.recognize(enhanced) if easyocr else []
 
     # 7. ROVER Token Voting
     roved_res = rover.align_and_vote([trocr_res, paddle_res, easy_res])
