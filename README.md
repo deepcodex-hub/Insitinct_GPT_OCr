@@ -2,6 +2,7 @@
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://deepcodex-instinct-gpt-ocr.streamlit.app/)
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
+[![Project History](https://img.shields.io/badge/Project-History-orange)](PROJECT_HISTORY.md)
 
 ## 🌐 Live Deployment
 👉 **[https://deepcodex-instinct-gpt-ocr.streamlit.app/](https://deepcodex-instinct-gpt-ocr.streamlit.app/)**
