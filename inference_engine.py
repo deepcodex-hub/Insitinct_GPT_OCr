@@ -69,10 +69,11 @@ def execute_inference(image_path, output_json=None):
         # Background compensation (useful for reflecting meter screens)
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 25))
         blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, kernel)
-        final_img = cv2.add(gray, blackhat)
+        gray_res = cv2.add(gray, blackhat)
+        final_img = cv2.cvtColor(gray_res, cv2.COLOR_GRAY2BGR) # Convert back to 3ch for YOLO
         
         # run on padded raw image with optimized threshold
-        print(f"Running YOLO inference on image shape: {padded_img.shape}")
+        print(f"Running YOLO inference on image shape: {final_img.shape}")
         results = digit_model(final_img, imgsz=1280, conf=0.08, iou=0.25)[0] 
         
         # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
