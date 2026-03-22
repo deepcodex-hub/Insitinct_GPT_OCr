@@ -69,29 +69,14 @@ class OCRRecognizer:
 
     def ensemble_vote(self, results_list: list):
         """Uses ROVER-style token alignment for ensembling."""
-        from ocr_pipeline.ensemble_rover import ROVEREnsemble
+        from ocr_pipeline.ensemble_rover import DecimalAwareRover
         
-        # Extract highest conf string from each model's output block
-        hyps = []
-        confs = []
+        ocr_results = []
         for engine_res in results_list:
             if not engine_res: continue
             best = max(engine_res, key=lambda x: x['confidence'])
-            hyps.append(best['text'])
-            confs.append(best['confidence'])
+            ocr_results.append({"text": best['text'], "confidence": best['confidence']})
             
-        if not hyps:
-            return {"text": "", "confidence": 0.0}
-            
-        rover = ROVEREnsemble()
-        best_str, net = rover.vote(hyps, confs)
-        
-        # Calculate an aggregate confidence (mean of token probabilities)
-        agg_conf = np.mean([t['confidence'] for t in net]) if net else 0.0
-        
-        return {
-            "text": best_str,
-            "confidence": agg_conf,
-            "net": net
-        }
+        rover = DecimalAwareRover()
+        return rover.align_and_vote(ocr_results)
 

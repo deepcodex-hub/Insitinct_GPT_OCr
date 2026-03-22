@@ -41,13 +41,39 @@ def run_infer(image_path, output_json=None):
     cv2.imwrite(os.path.join("outputs", "debug_warped.jpg"), warped)
     cv2.imwrite(os.path.join("outputs", "debug_enhanced.jpg"), enhanced)
     
-    # 3. OCR (TrOCR, Paddle, Easy -> ROVER)
-    trocr_res = recognizer.recognize_trocr(enhanced)
-    paddle_res = recognizer.recognize_paddle(enhanced)
-    easy_res = recognizer.recognize_easy(enhanced)
-    
-    roved_res = recognizer.ensemble_vote([trocr_res, paddle_res, easy_res])
-    raw_text = roved_res['text']
+    # 3. Custom YOLO Digit OCR (replaces TrOCR/Paddle)
+    from ultralytics import YOLO
+    try:
+        digit_model = YOLO(r"runs/detect/meter_detector/weights/best.pt")
+        
+        # Use the RAW target field for detection (SR/Dewarp can sometimes distort sharp edges of digital digits)
+        pad = 30
+        padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+        
+        # run on padded raw image with optimized threshold
+        results = digit_model(padded_img, imgsz=640, conf=0.10, iou=0.5)[0]
+        digits = []
+        for box in results.boxes:
+            x1 = float(box.xyxy[0][0]) - pad
+            cls_id = int(box.cls[0])
+            conf = float(box.conf[0])
+            # Classes: 0='0', ..., 9='9', 10='d'
+            cls_name = str(cls_id) if cls_id < 10 else '.'
+            digits.append((x1, cls_name, conf))
+        
+        # Sort left to right
+        digits.sort(key=lambda x: x[0])
+        raw_text = "".join([d[1] for d in digits])
+        avg_conf = sum([d[2] for d in digits]) / len(digits) if digits else 0.0
+        
+        roved_res = {
+            "text": raw_text if raw_text else "0",
+            "confidence": avg_conf
+        }
+    except Exception as e:
+        print(f"Custom YOLO failed: {e}")
+        raw_text = "0"
+        roved_res = {"text": "0", "confidence": 0.0}
     
     # 4. LLM Correction
     corrected_res = llm_corrector.correct(raw_text)

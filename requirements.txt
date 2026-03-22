@@ -25,3 +25,4 @@ Levenshtein
 pandas
 scikit-learn
 pillow
+streamlit

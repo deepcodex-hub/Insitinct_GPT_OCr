@@ -1,13 +1,23 @@
 # Instinct GPT OCR (Anti-Gravity Pipeline)
 
-Welcome to the **Instinct GPT OCR** project! This repository hosts a robust, production-grade Optical Character Recognition (OCR) pipeline explicitly designed for high-accuracy digit recognition from utility meters. 
+[![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 
-This repository makes it easy for our team to test, develop, and integrate state-of-the-art multi-model OCR architectures (TrOCR, PaddleOCR, EasyOCR) augmented by intelligent Large Language Model (LLM) post-processing.
+## 🚀 Optimized YOLOv8s ML Pipeline
+This repository now features a custom-trained **YOLOv8s** (Small) model, significantly upgraded for high-precision meter reading.
+
+### Performance Highlights:
+- **Architecture:** YOLOv8s (Small) trained for **200 Epochs**.
+- **Accuracy:** mAP50 = **0.963**.
+- **Capabilities:** Correctly identifies leading digits (`15620.`) and handles partially truncated boundaries via 30px edge padding.
+- **Web App:** Integrated **Streamlit Dashboard** for real-time visualization.
+
+### 📟 Launching the Streamlit App
+1. Install dependencies: `pip install -r requirements.txt`
+2. Run the dashboard: `streamlit run streamlit_app.py`
 
 ---
 
 ## 🗺️ Project Flow Map & Performance
-
 Our intelligent pipeline utilizes an ensemble approach combined with intensive preprocessing to ensure extremely high confidence readings.
 
 ```mermaid

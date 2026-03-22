@@ -1,17 +1,17 @@
 from ultralytics import YOLO
 
 if __name__ == '__main__':
-    print("Initializing YOLOv8 Nano model...")
-    model = YOLO("yolov8n.pt")
+    print("Initializing YOLOv8 Small model...")
+    model = YOLO("yolov8s.pt")
     
     print("Starting training on meter_dataset...")
     results = model.train(
-        data=r"D:\GPT_instinct\data\meter_dataset.yaml",
-        epochs=1,
+        data=r"c:\Users\Deephika\Insitinct_GPT_OCr\dataset\data.yaml",
+        epochs=200,
         imgsz=640,
         batch=16,
         name="meter_detector",
-        device="cpu"  # Force CPU in case standard CUDA isn't available to prevent fast-crashing
+        device=0  # Using RTX 4050 GPU as requested
     )
     
     print("Exporting best weights to ONNX format...")
