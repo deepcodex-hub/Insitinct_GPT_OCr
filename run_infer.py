@@ -46,7 +46,11 @@ def run_infer(image_path, output_json=None):
     # 3. Custom YOLO Digit OCR (replaces TrOCR/Paddle)
     from ultralytics import YOLO
     try:
-        digit_model = YOLO(r"runs/detect/meter_detector/weights/best.pt")
+        model_path = r"runs/detect/meter_detector4/weights/best.pt"
+        if not os.path.exists(model_path):
+            model_path = r"runs/detect/meter_detector/weights/best.pt"
+        print(f"Loading digit model from: {model_path}")
+        digit_model = YOLO(model_path)
         
         # Use the RAW target field for detection (SR/Dewarp can sometimes distort sharp edges of digital digits)
         pad = 30
@@ -62,6 +66,8 @@ def run_infer(image_path, output_json=None):
             # Classes: 0='0', ..., 9='9', 10='d'
             cls_name = str(cls_id) if cls_id < 10 else '.'
             digits.append((x1, cls_name, conf))
+        
+        print(f"Detected {len(digits)} digits.")
         
         # Sort left to right
         digits.sort(key=lambda x: x[0])
