@@ -94,13 +94,13 @@ pip install -r requirements.txt
 You can easily test the entire pipeline on a single image to see the outputs and debug artifacts:
 
 ```bash
-python run_infer.py --image "examples/sample_meter.png" --output "outputs/result.json"
+python run_infer.py --image "dataset/test/images/1_cropped_158_jpg-00_jpg.rf.d2c53374bfbf99faacb19c6d4d9a1eb2.jpg" --output "outputs/result.json"
 ```
 
 **What happens?**
-- The script detects the meter, crops it, applies Super Resolution and Dewarping (check the `outputs/` folder for `debug_warped.jpg` and `debug_enhanced.jpg`).
-- The OCR ensemble predicts the value, then the LLM corrects it.
-- A final JSON with coordinates, confidences, and the final value is printed and saved.
+- The script detects the meter, crops it, and applies specialized YOLOv8s digit detection. 
+- You can check the `outputs/` folder for debug visualizations (`debug_target.jpg`, etc.).
+- A final JSON with coordinates, confidences, and the final value is saved.
 
 ### 4. Running Test Suites
 To ensure your changes haven't broken the pipeline, run the automated API and unit tests:
