@@ -1,4 +1,4 @@
-# Instinct GPT OCR (Anti-Gravity Pipeline)
+# Instinct GPT OCR (DeepOCR Pipeline)
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://deepcodex-instinct-gpt-ocr.streamlit.app/)
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
