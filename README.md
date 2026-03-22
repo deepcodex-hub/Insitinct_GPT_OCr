@@ -4,7 +4,6 @@
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 
 ## 🌐 Live Deployment
-The application is officially live! Share this link with your team:  
 👉 **[https://deepcodex-instinct-gpt-ocr.streamlit.app/](https://deepcodex-instinct-gpt-ocr.streamlit.app/)**
 
 ---
