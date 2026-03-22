@@ -15,6 +15,7 @@ def execute_inference(image_path, output_json=None):
     detections = []
     
     # Lazy imports to avoid KeyError/Circular issues on Streamlit
+    import numpy as np
     from ag_module.detector import MeterDetector
     from ag_module.dewarp import DewarpProcessor
     from ag_module.sr import RealESRGANWrapper
@@ -61,7 +62,7 @@ def execute_inference(image_path, output_json=None):
         print(f"Model Classes: {digit_model.names}")
         
         # Use the RAW target field for detection (SR/Dewarp can sometimes distort sharp edges of digital digits)
-        pad = 100
+        pad = 30
         padded_img = cv2.copyMakeBorder(target_field, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=[0, 0, 0])
         
         # Use the RAW target field for detection (Safest baseline)
@@ -69,8 +70,7 @@ def execute_inference(image_path, output_json=None):
         
         # run on padded raw image with optimized threshold
         print(f"Running YOLO inference on image shape: {final_img.shape}")
-        print(f"Image stats: min={np.min(final_img)}, max={np.max(final_img)}, mean={np.mean(final_img):.2f}")
-        results = digit_model(final_img, imgsz=1024, conf=0.08, iou=0.25)[0] 
+        results = digit_model(final_img, imgsz=640, conf=0.10, iou=0.45)[0] 
         
         # 1. Deduplicate boxes (extra NMS layer for robustness at low conf)
         # Use simple IOU check
