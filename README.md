@@ -4,6 +4,18 @@
 [![Roboflow](https://img.shields.io/badge/Roboflow-Dataset-blue)](https://universe.roboflow.com/deephikas-workspace/meter-reading-tdkan-nonzv)
 [![Project History](https://img.shields.io/badge/Project-History-orange)](PROJECT_HISTORY.md)
 
+---
+
+## 🔍 Problem Statement
+Manual electricity meter reading is **time-consuming, error-prone, and inefficient**. Field agents often face challenges such as:
+- **Poor Lighting & Glare**: Obscures digital digits.
+- **Motion Blur & Tilted Images**: Makes standard OCR fail.
+- **Unreadable Digits**: Leads to incorrect billing and operational delays.
+
+This pipeline solves these issues using an industrial-grade **YOLOv8s** computer vision engine.
+
+---
+
 ## 🌐 Live Deployment
 👉 **[https://deepcodex-instinct-gpt-ocr.streamlit.app/](https://deepcodex-instinct-gpt-ocr.streamlit.app/)**
 
